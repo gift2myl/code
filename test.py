@@ -4,4 +4,4 @@ import random
 import os
 
 
-print os.system('ipconfig/all')
+print random.randint(1,99)
