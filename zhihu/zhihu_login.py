@@ -15,18 +15,20 @@ except:
 reload(sys)
 sys.setdefaultencoding('utf-8')
 url='https://www.zhihu.com'
-url_login='http://www.zhihu.com/login/email'
+url_login='https://www.zhihu.com/login/email'
 s=requests.session()
 s.cookies=cookielib.LWPCookieJar(filename='cookies')
 
 post_header={
- 			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
- 			'Accept-Encoding': 'gzip, deflate, sdch',
- 			'Accept-Language': 'en-US,en;q=0.8,zh-CN;q=0.6,zh;q=0.4,zh-TW;q=0.2',
+ 			'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+ 			'Accept-Encoding':'gzip, deflate, sdch',
+ 			'Accept-Language':'zh-CN,zh;q=0.8,en;q=0.6',
  			'Connection': 'keep-alive',
+ 			'Cache-Control':'max-age=0',
  			'Host': 'www.zhihu.com',
- 			'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36', 
- 			'Referer': 'http://www.zhihu.com/'
+ 			'DNT':'1',
+			'Upgrade-Insecure-Requests':'1',
+			'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'
  			}
 
 def get_xsrf():
@@ -39,7 +41,7 @@ def get_captcha():
 	captcha_data=s.get(captcha_url,headers=post_header).content
 	with open('captcha.gif','wb') as f:
 		f.write(captcha_data)
-	captcha_str = raw_input('请输入您的验证码\n>>>')
+	captcha_str = raw_input('请输入验证码\n>>>')
 	return captcha_str
 
 	
@@ -55,13 +57,16 @@ def login():
 	data=urllib.urlencode(login_data)
 	res=s.post(url_login,data=login_data,headers=post_header)
 	print res.status_code
+	print res.text
 	m_cookies=res.cookies
+	print m_cookies
 	s.cookies.save(ignore_discard=True,ignore_expires=True)
 #ignore_discard: save even cookies set to be discarded. 
 #ignore_expires: save even cookies that have expired.The file is overwritten if it already exists
 def isLogin():
     # 通过查看用户个人信息来判断是否已经登录
-    login_code = s.get('https://www.zhihu.com/settings/profile',headers=post_header,allow_redirects=False)
+    login_code=s.get('https://www.zhihu.com/settings/profile',headers=post_header,allow_redirects=False)
+    print login_code.status_code
     if int(x=login_code.status_code) == 200:
         return True
     else:

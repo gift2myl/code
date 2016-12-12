@@ -19,7 +19,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 '''设定主要访问链接'''
 zhihu_url='https://www.zhihu.com'
-question_id='21762137'
+question_id='22341406'
 topic_id='19776749'
 zhihu_question=zhihu_url+'/question/{0}'
 zhihu_topic=zhihu_url+'/topic/{0}'
@@ -61,5 +61,6 @@ if __name__=='__main__':
 	if isLogin():
 		print '爬虫登入成功！'
 	else:
+		print '爬虫登入失败！'
 		login()
 	main()
